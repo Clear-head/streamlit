@@ -4,6 +4,33 @@ import datetime
 import plotly.express as px
 import numpy as np
 
+
+def dummy_data_day():
+    region = ["경기도", "충청남도", "충청북도", "경상남도", "경상북도", "전라남도", "제주특별자치도", "강원특별자치도", "전북특별자치도"]
+    data = {region[_]: [i for i in np.random.randint(1, 30, 7)] for _ in range(len(region))}
+    now = datetime.date.today()
+    date = [(now - datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
+
+    return pd.DataFrame(data, index=date)
+
+def dummy_data_week():
+    region = ["경기도", "충청남도", "충청북도", "경상남도", "경상북도", "전라남도", "제주특별자치도", "강원특별자치도", "전북특별자치도"]
+    data = {region[_]: [i for i in np.random.randint(1, 30, 7)] for _ in range(len(region))}
+    now = datetime.date.today()
+    date = [(now - datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
+
+    return pd.DataFrame(data, index=date)
+
+
+def dummy_data_month():
+    region = ["경기도", "충청남도", "충청북도", "경상남도", "경상북도", "전라남도", "제주특별자치도", "강원특별자치도", "전북특별자치도"]
+    data = {region[_]: [i for i in np.random.randint(1, 30, 12)] for _ in range(len(region))}
+    now = datetime.date.today()
+    date = [(now - datetime.timedelta(weeks=i*4)).strftime("%Y-%m") for i in range(12)]
+
+    return pd.DataFrame(data, index=date)
+
+
 def start_setup():
     df = pd.read_csv("./data/2019.csv")
     now = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -61,7 +88,13 @@ def daily_dash(fig=None):
 
     #   일주일 차트.
     chart_col()
-    # st.plotly_chart(fig)
+    st.plotly_chart(
+        px.bar(
+            x=dummy_data_day().columns,
+            y=[sum(dummy_data_day()[i]) for i in dummy_data_day()],
+            template='plotly_dark'
+        )
+    )
 
 
 def week_dash(fig=None):
@@ -71,7 +104,14 @@ def week_dash(fig=None):
 
     #   월단위 차트
     chart_col()
-    # st.plotly_chart(fig)
+    st.plotly_chart(
+        px.bar(
+            data_frame=dummy_data_week(),
+            y=dummy_data_week().columns,
+            x=dummy_data_week().index,
+            template='plotly_dark'
+        )
+    )
 
 
 def month_dash(fig=None):
@@ -80,7 +120,14 @@ def month_dash(fig=None):
 
     #   1년 차트
     chart_col()
-    # st.plotly_chart(fig)
+    st.plotly_chart(
+        px.bar(
+            data_frame=dummy_data_month(),
+            y=dummy_data_month().columns,
+            x=dummy_data_month().index,
+            template='plotly_dark'
+        )
+    )
 
 
 def total_dash(fig=None):
